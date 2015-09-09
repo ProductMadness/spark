@@ -54,6 +54,7 @@
   See http://spark.apache.org/docs/latest/streaming-kinesis-integration.html for more details on
   the Kinesis Spark Streaming integration.
 """
+from __future__ import print_function
 import sys
 
 from pyspark import SparkContext
@@ -71,7 +72,7 @@ if __name__ == "__main__":
     ssc = StreamingContext(sc, 1)
     appName, streamName, endpointUrl, regionName = sys.argv[1:]
     lines = KinesisUtils.createStream(
-        ssc, appName, streamName, endpointUrl, regionName, InitialPositionInStream.LATEST, 2)
+        ssc, appName, streamName, endpointUrl, regionName, InitialPositionInStream.TRIM_HORIZON, 2)
     counts = lines.flatMap(lambda line: line.split(" ")) \
         .map(lambda word: (word, 1)) \
         .reduceByKey(lambda a, b: a+b)
